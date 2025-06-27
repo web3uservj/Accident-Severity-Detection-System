@@ -36,16 +36,16 @@ An intelligent accident severity detection system using **YOLOv5/YOLOv8**, integ
 
 ## 📂 Directory Structure
 .
-├── datasets/
-│ └── data.yaml # Class label mapping
-├── runs/ # YOLO training outputs
-├── static/
-│ └── results/ # Output images/videos
-├── templates/ # Flask HTML templates (if any)
-├── app.py # Main entry point (Flask + CLI)
-├── README.md
-├── requirements.txt
-└── alert.wav # Sound alert for severe detection
+├── datasets/                                                                                                                                                                                                       
+│ └── data.yaml # Class label mapping                                                                                                                                                                               
+├── runs/ # YOLO training outputs                                                                                                                                                                                   
+├── static/                                                                                                                                                                                                         
+│ └── results/ # Output images/videos                                                                                                                                                                               
+├── templates/ # Flask HTML templates (if any)                                                                                                                                                                      
+├── app.py # Main entry point (Flask + CLI)                                                                                                                                                                         
+├── README.md                                                                                                                                                                                                       
+├── requirements.txt                                                                                                                                                                                                
+└── alert.wav # Sound alert for severe detection                                                                                                                                                                    
 
 
 ---
