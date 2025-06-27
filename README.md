@@ -164,7 +164,3 @@ MIT License. See LICENSE for more details.
 Developer: VIJAY M
 📫 Email: vj17092002@gmail.com
 ---
-📧 Contact
-Developer: VIJAY M
-📫 Email: vj17092002@gmail.com
----
