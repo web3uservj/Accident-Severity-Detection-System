@@ -64,8 +64,8 @@ An intelligent accident severity detection system using **YOLOv5/YOLOv8**, integ
 pip install -r requirements.txt
 ---
 
-### Required packages include:
-
+Required packages include:
+---
 torch
 
 opencv-python
@@ -79,9 +79,10 @@ matplotlib
 tkinter (pre-installed with Python)
 
 smtplib, email, requests (standard libs)
----
 
-### ⚙️ Setup
+
+⚙️ Setup
+---
 MongoDB: Ensure MongoDB is running locally (mongodb://localhost:27017/).
 
 Model: Place your YOLOv5 or YOLOv8 model at yolo11n.pt or update the path.
@@ -93,11 +94,10 @@ names:
   1: Moderate
   2: Severe
 
-
 Email Alerts: Update credentials in sendmail() function.
----
 
-###🎮 Run the App
+🎮 Run the App
+---
 ✅ GUI Mode (Tkinter)
 python app.py
 
@@ -106,16 +106,18 @@ You’ll see a window titled Accident Severity Detection:
 Image – Run YOLO on an image
 
 Camera – Detect from webcam in real-time
----
 
-###🧪 Command-Line Interface
+
+🧪 Command-Line Interface
+---
 python app.py --input path/to/image_or_video --model yolo11n.pt
 
 Example:
 python app.py --input samples/accident.jpg --model runs/detect/Accident/weights/best.pt
----
 
-### 📊 Output
+
+📊 Output
+---
 📁 Annotated results are saved to static/results/
 
 🧾 Logs are stored in MongoDB:
@@ -123,18 +125,19 @@ python app.py --input samples/accident.jpg --model runs/detect/Accident/weights/
 detections collection
 
 email_logs collection
+
+
+📤 Severe accidents trigger:
 ---
-
-###📤 Severe accidents trigger:
-
 Email with image attachment
 
 SMS message with location info
 
 Audio alert via alert.wav
----
 
-###🛠️ Customization
+
+🛠️ Customization
+---
 🔧 Change Class Names: Update datasets/data.yaml
 
 🧠 Replace Model: Swap out best.pt or yolo11n.pt with your own
@@ -144,17 +147,23 @@ Audio alert via alert.wav
 📱 SMS API Key: Replace your own key in sendmsg() function
 
 🔐 Security Notes
+---
 Never hardcode credentials in production. Use environment variables.
 
 Restrict MongoDB access in public deployments.
----
 
-###🤝 Contribution
+
+🤝 Contribution
+---
 Pull requests and improvements are welcome. Please open issues for bugs or suggestions.
 
 📃 License
 MIT License. See LICENSE for more details.
 
+📧 Contact
+Developer: VIJAY M
+📫 Email: vj17092002@gmail.com
+---
 📧 Contact
 Developer: VIJAY M
 📫 Email: vj17092002@gmail.com
