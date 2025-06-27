@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - Accident Severity Detection</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+  --primary-color: #3a6df0;
+  --secondary-color: #2952cc;
+  --accent-color: #4895ef;
+  --success-color: #4cc9f0;
+  --warning-color: #e63946;
+  --light-color: #f8f9fa;
+  --dark-color: #212529;
+  --gray-dark: #343a40;
+  --gray-light: #e9ecef;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f5f7fa;
+  padding-top: 60px;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.header-nav {
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.header-nav .navbar-brand {
+  color: var(--primary-color) !important;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.header-nav .nav-link {
+  color: #495057 !important;
+  font-weight: 500;
+  padding: 0.6rem 1rem;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  position: relative;
+}
+
+.header-nav .nav-link:hover {
+  color: var(--primary-color) !important;
+  background-color: transparent;
+}
+
+.header-nav .nav-link.active {
+  color: var(--primary-color) !important;
+  font-weight: 600;
+  background-color: transparent;
+}
+
+.header-nav .nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 1rem;
+  right: 1rem;
+  height: 2px;
+  background-color: var(--primary-color);
+  z-index: 1;
+}
+
+.header-nav .nav-link:hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(58, 109, 240, 0.03);
+  border-radius: 4px;
+  z-index: 0;
+}
+
+.header-nav .nav-link i,
+.header-nav .nav-link span {
+  position: relative;
+  z-index: 2;
+}
+
+.admin-badge {
+  background-color: #f0f4ff;
+  color: var(--primary-color);
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.dashboard-header {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  box-shadow: 0 4px 12px rgba(67, 97, 238, 0.1);
+  border-radius: 8px;
+  padding: 1.5rem !important;
+}
+
+.dashboard-header h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.dashboard-header .lead {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.dashboard-header .btn {
+  font-size: 0.85rem;
+  padding: 0.5rem 1rem;
+}
+
+.card {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.85rem;
+}
+
+.table thead th {
+  background-color: #f8f9fa;
+  color: #495057;
+  font-weight: 600;
+  border-bottom: 1px solid #e9ecef;
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  background-color: var(--primary-color);
+  color: white;
+  text-align: center;
+  line-height: 32px;
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.btn {
+  font-weight: 500;
+  border-radius: 4px;
+  padding: 0.4rem 0.8rem;
+  transition: all 0.2s ease;
+  font-size: 0.8rem;
+}
+
+.btn-sm {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.btn-info {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.btn-info:hover {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.btn-danger {
+  background-color: var(--warning-color);
+  border-color: var(--warning-color);
+}
+
+.btn-outline-primary {
+  color: var(--primary-color) !important;
+  border-color: var(--primary-color);
+  font-size: 0.8rem;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-color);
+  color: white !important;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(67, 97, 238, 0.03);
+}
+
+.card-header {
+  background-color: white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 0.9rem 1.25rem;
+  font-weight: 600;
+  color: var(--dark-color);
+  font-size: 0.9rem;
+}
+
+.card-header i {
+  color: var(--primary-color);
+}
+
+.alert {
+  border-radius: 6px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  font-size: 0.85rem;
+  padding: 0.75rem 1rem;
+}
+
+.alert-success {
+  background-color: rgba(76, 201, 240, 0.1);
+  color: var(--success-color);
+}
+
+.action-buttons .btn {
+  margin-right: 3px;
+}
+
+.action-buttons .btn i {
+  margin-right: 3px;
+  font-size: 0.7rem;
+}
+
+.table td {
+  padding: 0.75rem;
+  vertical-align: middle;
+  font-size: 0.85rem;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  padding: 0.4rem 0.8rem;
+}
+
+.dashboard-stats {
+  margin-bottom: 1.5rem;
+}
+
+.stat-card {
+  padding: 1rem;
+  border-radius: 8px;
+  height: 100%;
+}
+
+.stat-card i {
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.stat-card .stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.stat-card .stat-label {
+  color: #6c757d;
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.users-card {
+  margin-top: 1rem;
+}
+
+.fw-medium {
+  font-weight: 500;
+}
+  </style>
+</head>
+<body>
+  <!-- Header Navigation -->
+  <nav class="navbar navbar-expand-lg header-nav fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="bi bi-shield-check me-2"></i>Accident Severity Detection
+        <span class="admin-badge">Admin</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item"><a class="nav-link active" href="#"><i class="bi bi-people me-1"></i>Manage Users</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('manage_policies') }}"><i class="bi bi-shield-check me-1"></i>Insurance Policies</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_detection_stats') }}"><i class="bi bi-graph-up me-1"></i>Detection Stats</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_settings') }}"><i class="bi bi-gear me-1"></i>Settings</a></li>
+        </ul>
+        <a href="{{ url_for('home') }}" class="btn btn-outline-primary logout-btn">
+          <i class="bi bi-box-arrow-right"></i> Logout
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container py-3">
+    <div class="row mb-3">
+  <div class="col-12">
+    <div class="dashboard-header rounded-3 p-3">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1 class="fw-bold mb-1">Admin Dashboard</h1>
+          <p class="lead mb-0">Manage users, policies, and system settings</p>
+        </div>
+        <div class="col-md-4 text-md-end mt-2 mt-md-0">
+          <div class="d-flex gap-2 justify-content-md-end">
+            <a href="{{ url_for('admin_detection_stats') }}" class="btn btn-light px-3">
+              <i class="bi bi-graph-up me-1"></i> View Stats
+            </a>
+            <a href="{{ url_for('manage_policies') }}" class="btn btn-light px-3">
+              <i class="bi bi-shield-check me-1"></i> Manage Policies
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Dashboard Stats -->
+    <div class="row dashboard-stats">
+  <div class="col-md-3 col-sm-6 mb-3">
+    <div class="card stat-card bg-white">
+      <i class="bi bi-people text-primary"></i>
+      <div class="stat-value">{{ data|length }}</div>
+      <div class="stat-label">Total Users</div>
+    </div>
+  </div>
+  <div class="col-md-3 col-sm-6 mb-3">
+    <div class="card stat-card bg-white">
+      <i class="bi bi-shield-check text-success"></i>
+      <div class="stat-value">{{ policies_count|default(0) }}</div>
+      <div class="stat-label">Active Policies</div>
+    </div>
+  </div>
+  <div class="col-md-3 col-sm-6 mb-3">
+    <div class="card stat-card bg-white">
+      <i class="bi bi-graph-up text-info"></i>
+      <div class="stat-value">{{ assessments_count|default(0) }}</div>
+      <div class="stat-label">Risk Assessments</div>
+    </div>
+  </div>
+  <div class="col-md-3 col-sm-6 mb-3">
+    <div class="card stat-card bg-white">
+      <i class="bi bi-check-circle text-warning"></i>
+      <div class="stat-value">{{ recommendations_count|default(0) }}</div>
+      <div class="stat-label">Recommendations</div>
+    </div>
+  </div>
+</div>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-success mb-4">
+            <i class="bi bi-check-circle-fill me-2"></i>{{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Users Table -->
+    <div class="card users-card">
+  <div class="card-header d-flex align-items-center">
+    <i class="bi bi-people me-2"></i>
+    <h5 class="mb-0" style="font-size: 0.95rem;">Registered Users</h5>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Mobile</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Username</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in data %}
+          <tr>
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="user-avatar me-2">{{ user.get('name', '')[0] }}</div>
+                <span class="fw-medium">{{ user.get('name', '') }}</span>
+              </div>
+            </td>
+            <td>{{ user.get('mobile', '') }}</td>
+            <td>{{ user.get('email', '') }}</td>
+            <td>{{ user.get('address', '') }}</td>
+            <td>{{ user.get('username', '') }}</td>
+            <td>
+              <div class="d-flex gap-1 action-buttons">
+                <a href="{{ url_for('risk_assessment', user_id=user._id) }}" class="btn btn-sm btn-primary">
+                  <i class="bi bi-shield-check"></i> Risk
+                </a>
+                <a href="{{ url_for('user_recommendations', user_id=user._id) }}" class="btn btn-sm btn-info text-white">
+                  <i class="bi bi-graph-up"></i> Recommend
+                </a>
+                <a href="{{ url_for('delete_user', user_id=user._id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this user?')">
+                  <i class="bi bi-trash"></i>
+                </a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detection Statistics - Accident Severity Detection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #3a6df0;
+            --secondary-color: #2952cc;
+            --accent-color: #4895ef;
+            --success-color: #4cc9f0;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--gray-700);
+            min-height: 100vh;
+            padding-top: 60px;
+            font-size: 0.9rem;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            padding: 0.5rem 1rem;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            color: var(--gray-900) !important;
+            font-size: 1.1rem;
+        }
+
+        .nav-link {
+            color: var(--gray-600) !important;
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+            background-color: var(--gray-50);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color) !important;
+            background-color: rgba(58, 109, 240, 0.1);
+        }
+
+        .nav-link i {
+            margin-right: 0.375rem;
+        }
+
+        .btn-logout {
+            font-size: 0.8rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background-color: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        /* Page Header */
+        .page-header {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .page-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--gray-600);
+            margin-bottom: 0;
+        }
+
+        /* Card Styles */
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid var(--gray-100);
+            padding: 1rem 1.25rem;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header h5 i {
+            color: var(--primary-color);
+            margin-right: 0.5rem;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+        }
+
+        /* Stats Card */
+        .stats-card {
+            text-align: center;
+            padding: 1.25rem;
+        }
+
+        .stats-card .stats-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 0.5rem;
+            background-color: rgba(58, 109, 240, 0.1);
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        .stats-card .stats-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-card .stats-label {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            margin-bottom: 0;
+        }
+
+        /* Severity Badges */
+        .severity-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            font-weight: 500;
+            font-size: 0.75rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .severity-minor {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+
+        .severity-moderate {
+            background-color: rgba(249, 115, 22, 0.1);
+            color: #ea580c;
+        }
+
+        .severity-severe {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+        }
+
+        /* Table Styles */
+        .table {
+            font-size: 0.85rem;
+            color: var(--gray-700);
+        }
+
+        .table th {
+            font-weight: 600;
+            color: var(--gray-800);
+            border-bottom-width: 1px;
+            padding: 0.75rem 1rem;
+        }
+
+        .table td {
+            padding: 0.75rem 1rem;
+            vertical-align: middle;
+        }
+
+        .table tbody tr:hover {
+            background-color: var(--gray-50);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-shield-check me-2"></i>Admin Dashboard
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('Adminhomee') }}">
+                            <i class="bi bi-people"></i> Users
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('admin_detection_stats') }}">
+                            <i class="bi bi-bar-chart"></i> Detection Stats
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('manage_policies') }}">
+                            <i class="bi bi-shield"></i> Policies
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_settings') }}">
+                            <i class="bi bi-gear"></i> Settings
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="{{ url_for('home') }}" class="btn btn-logout">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <div class="page-header animate-fade-in">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1>Detection Statistics</h1>
+                    <p>Overview of accident detection data and analytics</p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <button class="btn btn-primary" onclick="window.print()">
+                        <i class="bi bi-printer"></i> Print Report
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="card animate-slide-up" style="animation-delay: 0.1s;">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="bi bi-camera"></i>
+                        </div>
+                        <div class="stats-value">{{ stats.total_detections }}</div>
+                        <div class="stats-label">Total Detections</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card animate-slide-up" style="animation-delay: 0.2s;">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <div class="stats-value">{{ stats.total_users }}</div>
+                        <div class="stats-label">Total Users</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card animate-slide-up" style="animation-delay: 0.3s;">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="bi bi-person-check"></i>
+                        </div>
+                        <div class="stats-value">{{ stats.active_users }}</div>
+                        <div class="stats-label">Active Users</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card animate-slide-up" style="animation-delay: 0.4s;">
+                    <div class="stats-card">
+                        <div class="stats-icon" style="background-color: rgba(239, 68, 68, 0.1); color: var(--danger-color);">
+                            <i class="bi bi-exclamation-triangle"></i>
+                        </div>
+                        <div class="stats-value">
+                            {% set severe_count = 0 %}
+                            {% for severity in stats.severity_counts %}
+                                {% if severity._id == 'Severe' %}
+                                    {% set severe_count = severity.count %}
+                                {% endif %}
+                            {% endfor %}
+                            {{ severe_count }}
+                        </div>
+                        <div class="stats-label">Severe Accidents</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Detection Chart -->
+            <div class="col-lg-8 mb-4">
+                <div class="card animate-slide-up" style="animation-delay: 0.5s;">
+                    <div class="card-header">
+                        <h5><i class="bi bi-graph-up"></i> Detection Trend (Last 7 Days)</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="detectionChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Severity Distribution -->
+            <div class="col-lg-4 mb-4">
+                <div class="card animate-slide-up" style="animation-delay: 0.6s;">
+                    <div class="card-header">
+                        <h5><i class="bi bi-pie-chart"></i> Severity Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="severityChart" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Detections -->
+        <div class="card animate-slide-up" style="animation-delay: 0.7s;">
+            <div class="card-header">
+                <h5><i class="bi bi-clock-history"></i> Recent Detections</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>User</th>
+                                <th>Detections</th>
+                                <th>Alert Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detection in stats.recent_detections %}
+                                <tr>
+                                    <td>{{ detection.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                    <td>{{ detection.username }}</td>
+                                    <td>
+                                        {% if detection.detections %}
+                                            {% for det in detection.detections %}
+                                                <span class="severity-badge severity-{{ det.class_name.lower() }}">
+                                                    {{ det.class_name }}
+                                                    {% if det.confidence %}
+                                                        ({{ (det.confidence * 100) | round(1) }}%)
+                                                    {% endif %}
+                                                </span>
+                                            {% endfor %}
+                                        {% else %}
+                                            <span class="text-muted">No detections</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if detection.is_alert %}
+                                            <span class="badge bg-danger">Alert Triggered</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Normal</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('ViewDetection', detection_id=detection._id) }}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Detection Trend Chart
+        const detectionCtx = document.getElementById('detectionChart').getContext('2d');
+        const detectionChart = new Chart(detectionCtx, {
+            type: 'line',
+            data: {
+                labels: {{ stats.chart_labels|tojson }},
+                datasets: [{
+                    label: 'Detections',
+                    data: {{ stats.chart_data|tojson }},
+                    backgroundColor: 'rgba(58, 109, 240, 0.1)',
+                    borderColor: '#3a6df0',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    pointBackgroundColor: '#3a6df0',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        });
+
+        // Severity Distribution Chart
+        const severityCtx = document.getElementById('severityChart').getContext('2d');
+
+        // Prepare data for severity chart
+        const severityLabels = [];
+        const severityData = [];
+        const severityColors = {
+            'Minor': '#f59e0b',
+            'Moderate': '#ea580c',
+            'Severe': '#ef4444'
+        };
+        const backgroundColors = [];
+
+        {% for severity in stats.severity_counts %}
+            severityLabels.push('{{ severity._id }}');
+            severityData.push({{ severity.count }});
+            backgroundColors.push(severityColors['{{ severity._id }}'] || '#3a6df0');
+        {% endfor %}
+
+        const severityChart = new Chart(severityCtx, {
+            type: 'doughnut',
+            data: {
+                labels: severityLabels,
+                datasets: [{
+                    data: severityData,
+                    backgroundColor: backgroundColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Image - Accident Severity Detection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3a6df0;
+            --secondary-color: #2952cc;
+            --accent-color: #4895ef;
+            --success-color: #4cc9f0;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--gray-700);
+            min-height: 100vh;
+            padding-top: 60px;
+            font-size: 0.9rem;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            padding: 0.5rem 1rem;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            color: var(--gray-900) !important;
+            font-size: 1.1rem;
+        }
+
+        .nav-link {
+            color: var(--gray-600) !important;
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+            background-color: var(--gray-50);
+        }
+
+        .nav-link.active {
+            color: var(--primary-color) !important;
+            background-color: rgba(58, 109, 240, 0.1);
+        }
+
+        .nav-link i {
+            margin-right: 0.375rem;
+        }
+
+        .btn-logout {
+            font-size: 0.8rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            color: var(--gray-700);
+            border: 1px solid var(--gray-300);
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background-color: var(--gray-50);
+            color: var(--gray-900);
+        }
+
+        /* Page Header */
+        .page-header {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .page-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            color: var(--gray-600);
+            margin-bottom: 0;
+        }
+
+        /* Card Styles */
+        .card {
+            border: none;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            background-color: white;
+            border-bottom: 1px solid var(--gray-100);
+            padding: 1rem 1.25rem;
+        }
+
+        .card-header h5 {
+            margin: 0;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            display: flex;
+            align-items: center;
+        }
+
+        .card-header h5 i {
+            color: var(--primary-color);
+            margin-right: 0.5rem;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--gray-300);
+            border-radius: 0.5rem;
+            padding: 2.5rem 1.5rem;
+            text-align: center;
+            background-color: var(--gray-50);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background-color: rgba(58, 109, 240, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* Buttons */
+        .btn {
+            font-weight: 500;
+            font-size: 0.85rem;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(58, 109, 240, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            border-color: var(--gray-300);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--gray-50);
+            color: var(--gray-900);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-primary {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px -1px rgba(58, 109, 240, 0.2);
+        }
+
+        .btn-outline-secondary {
+            border-color: var(--gray-300);
+            color: var(--gray-700);
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: var(--gray-50);
+            color: var(--gray-900);
+            transform: translateY(-1px);
+        }
+
+        .btn i {
+            margin-right: 0.375rem;
+        }
+
+        /* Severity Badges */
+        .severity-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            font-weight: 500;
+            font-size: 0.75rem;
+            margin-right: 0.5rem;
+        }
+
+        .severity-minor {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+        }
+
+        .severity-moderate {
+            background-color: rgba(249, 115, 22, 0.1);
+            color: #ea580c;
+        }
+
+        .severity-severe {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+        }
+
+        /* Alerts */
+        .alert {
+            border-radius: 0.5rem;
+            padding: 0.875rem 1rem;
+            margin-bottom: 1.25rem;
+            border: none;
+            font-size: 0.85rem;
+        }
+
+        .alert-info {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #2563eb;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+
+        /* Image Preview */
+        .image-preview-container {
+            background-color: var(--gray-50);
+            border-radius: 0.5rem;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .image-preview {
+            max-height: 300px;
+            border-radius: 0.375rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Info Items */
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .info-item-badge {
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+
+        .info-item-text {
+            font-size: 0.85rem;
+            color: var(--gray-700);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .empty-state-icon {
+            font-size: 2.5rem;
+            color: var(--gray-400);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state-text {
+            color: var(--gray-500);
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-shield-check me-2"></i>Accident Detection
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('Userhome') }}">
+                            <i class="bi bi-person"></i> Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('Predict') }}">
+                            <i class="bi bi-camera"></i> Camera Detection
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('AnalyzeImage') }}">
+                            <i class="bi bi-image"></i> Upload Image
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('DetectionHistory') }}">
+                            <i class="bi bi-clock-history"></i> Detection History
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex">
+                    <a href="{{ url_for('home') }}" class="btn btn-logout">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <div class="page-header animate-fade-in">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1>Upload Image</h1>
+                    <p>Upload and analyze images for accident severity detection</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a href="{{ url_for('DetectionHistory') }}" class="btn btn-primary">
+                        <i class="bi bi-clock-history"></i> View History
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info animate-fade-in">
+                        <i class="bi bi-info-circle me-2"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card animate-slide-up" style="animation-delay: 0.1s;">
+                    <div class="card-header">
+                        <h5><i class="bi bi-upload"></i> Upload an Image</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted mb-4">Upload an image to analyze for accident severity. Supported formats: JPG, JPEG, PNG, GIF.</p>
+
+                        <form action="{{ url_for('AnalyzeImage') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
+                            <div class="upload-area" id="uploadArea">
+                                <i class="bi bi-cloud-arrow-up upload-icon"></i>
+                                <h5 class="mb-3" style="font-weight: 600; font-size: 1rem;">Drag & Drop Image Here</h5>
+                                <p class="text-muted mb-3">or</p>
+                                <button type="button" class="btn btn-primary" id="browseButton">Browse Files</button>
+                                <input type="file" name="image" id="imageInput" class="file-input" accept="image/*">
+                            </div>
+
+                            <div id="imagePreviewContainer" class="mt-4" style="display: none;">
+                                <h5 class="mb-3" style="font-weight: 600; font-size: 1rem;">Image Preview:</h5>
+                                <div class="image-preview-container">
+                                    <img id="imagePreview" class="img-fluid image-preview mb-3">
+                                </div>
+                                <div class="d-flex justify-content-between mt-4">
+                                    <button type="button" class="btn btn-outline-secondary" id="changeImageBtn">
+                                        <i class="bi bi-arrow-left"></i> Change Image
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-lightning"></i> Analyze Image
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card animate-slide-up" style="animation-delay: 0.2s;">
+                    <div class="card-header">
+                        <h5><i class="bi bi-info-circle"></i> About Accident Detection</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">Our system uses advanced AI to detect and classify accidents into three severity levels:</p>
+
+                        <div class="info-item">
+                            <span class="severity-badge severity-minor info-item-badge">Minor</span>
+                            <span class="info-item-text">Small accidents with minimal damage</span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="severity-badge severity-moderate info-item-badge">Moderate</span>
+                            <span class="info-item-text">Medium severity accidents with significant damage</span>
+                        </div>
+
+                        <div class="info-item">
+                            <span class="severity-badge severity-severe info-item-badge">Severe</span>
+                            <span class="info-item-text">High severity accidents with major damage</span>
+                        </div>
+
+                        <div class="alert alert-info mt-3">
+                            <i class="bi bi-lightbulb me-2"></i>
+                            The system will analyze your image and provide detailed results about any detected accidents.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card animate-slide-up mt-3" style="animation-delay: 0.25s;">
+                    <div class="card-header">
+                        <h5><i class="bi bi-envelope"></i> Email Testing</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">Having trouble with email notifications? You can test the email system directly:</p>
+
+                        <a href="{{ url_for('test_email') }}" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-envelope"></i> Send Test Email
+                        </a>
+
+                        <div class="mt-3">
+                            <small class="text-muted">This will send a test email to your registered email address.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card animate-slide-up" style="animation-delay: 0.3s;">
+                    <div class="card-header">
+                        <h5><i class="bi bi-clock-history"></i> Recent Uploads</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="empty-state">
+                            <i class="bi bi-images empty-state-icon"></i>
+                            <p class="empty-state-text">No recent uploads found.</p>
+                            <a href="{{ url_for('DetectionHistory') }}" class="btn btn-outline-primary">
+                                <i class="bi bi-clock-history"></i> View History
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadArea = document.getElementById('uploadArea');
+            const imageInput = document.getElementById('imageInput');
+            const imagePreview = document.getElementById('imagePreview');
+            const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+            const browseButton = document.getElementById('browseButton');
+            const changeImageBtn = document.getElementById('changeImageBtn');
+            const uploadForm = document.getElementById('uploadForm');
+
+            // Open file dialog when browse button is clicked
+            browseButton.addEventListener('click', function() {
+                imageInput.click();
+            });
+
+            // Change image button
+            changeImageBtn.addEventListener('click', function() {
+                imagePreviewContainer.style.display = 'none';
+                uploadArea.style.display = 'block';
+                imageInput.value = '';
+            });
+
+            // Handle file selection
+            imageInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const file = this.files[0];
+
+                    // Check if file is an image
+                    if (!file.type.match('image.*')) {
+                        alert('Please select an image file');
+                        return;
+                    }
+
+                    // Display image preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        uploadArea.style.display = 'none';
+                        imagePreviewContainer.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Handle drag and drop
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'var(--primary-color)';
+                uploadArea.style.backgroundColor = 'rgba(58, 109, 240, 0.05)';
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'var(--gray-300)';
+                uploadArea.style.backgroundColor = 'var(--gray-50)';
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.style.borderColor = 'var(--gray-300)';
+                uploadArea.style.backgroundColor = 'var(--gray-50)';
+
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    const file = e.dataTransfer.files[0];
+
+                    // Check if file is an image
+                    if (!file.type.match('image.*')) {
+                        alert('Please drop an image file');
+                        return;
+                    }
+
+                    // Set the file to the input
+                    imageInput.files = e.dataTransfer.files;
+
+                    // Display image preview
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        imagePreview.src = e.target.result;
+                        uploadArea.style.display = 'none';
+                        imagePreviewContainer.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
