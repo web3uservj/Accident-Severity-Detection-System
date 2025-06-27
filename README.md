@@ -58,11 +58,11 @@ An intelligent accident severity detection system using **YOLOv5/YOLOv8**, integ
 - MongoDB (local or cloud)
 - pip
 
-### 📦 Install Dependencies
-
+📦 Install Dependencies
+---
 ```bash
 pip install -r requirements.txt
----
+```
 
 Required packages include:
 ---
