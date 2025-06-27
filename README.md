@@ -1,3 +1,4 @@
+![image](https://github.com/user-attachments/assets/6fa449d7-01d4-4c81-b6ae-7a3fa6ca021c)
 
 # 🚨 Accident Severity Detection System
 
